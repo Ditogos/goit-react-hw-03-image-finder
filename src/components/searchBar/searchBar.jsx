@@ -26,7 +26,7 @@ export class Searchbar extends Component {
       <SearchbarHeader onSubmit={this.handleSubmit} className="searchbar">
         <SearchForm className="form">
           <button type="submit" className="button">
-            <span className="button-label">Search</span>
+            <span className="button-label">Search Image</span>
           </button>
 
           <input
