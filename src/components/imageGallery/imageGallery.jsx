@@ -66,7 +66,7 @@ export class ImageGallery extends Component {
       <Container>
         {this.state.loading && <Loader />}
 
-        {this.state.images && (
+        {this.state.images && this.state.images.length > 0 && (
           <ImageGalleryUl>
             {this.state.images.map(image => {
               return (
