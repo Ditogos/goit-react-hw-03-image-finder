@@ -1,18 +1,70 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Wrapper } from './App.styled';
-
+import { toast } from 'react-toastify';
+import { Button } from 'components/button/button';
 import { Searchbar } from 'components/searchBar/searchBar';
 import { ImageGallery } from 'components/imageGallery/imageGallery';
 import { Modal } from 'components/modal/modal';
+import { fetchGallery } from 'Api/fetchGallery';
 
 export class App extends Component {
   state = {
     searchQuery: '',
     isShowModal: false,
     modalImage: '',
+    images: null,
+    loading: false,
+    page: 1,
+    hiddenBnt: false,
   };
+
+  showErrorMsg = () => {
+    toast.error('Sorry, there are no more images matching your search query.');
+  };
+
+  onFindMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+      loading: true,
+      hiddenBnt: false,
+    }));
+    setTimeout(() => {
+      fetchGallery(this.props.searchQuery, this.state.page)
+        .then(({ hits, totalHits }) => {
+          if (hits.length === 0) {
+            this.showErrorMsg();
+            this.setState({ hiddenBnt: true });
+          } else
+            this.setState(prevState => ({
+              images: [...prevState.images, ...hits],
+            }));
+          if (12 * this.state.page > totalHits) {
+            this.setState({ hiddenBnt: true });
+            this.showErrorMsg();
+          }
+        })
+        .catch(error => this.setState({ error }))
+        .finally(() => this.setState({ loading: false }));
+    });
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.searchQuery !== this.props.searchQuery) {
+      this.setState({ loading: true, images: null, page: 1, hiddenBnt: false });
+      setTimeout(() => {
+        fetchGallery(this.props.searchQuery, this.state.page)
+          .then(({ hits }) => {
+            if (hits.length === 0) {
+              this.showErrorMsg();
+            } else this.setState({ images: hits });
+          })
+          .catch(error => this.setState({ error }))
+          .finally(() => this.setState({ loading: false }));
+      });
+    }
+  }
 
   handleFormSubmit = searchQuery => {
     this.setState({ searchQuery });
