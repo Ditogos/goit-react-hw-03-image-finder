@@ -3,7 +3,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Wrapper } from './App.styled';
 import { toast } from 'react-toastify';
-import { Button } from 'components/Button/Button';
 import { Searchbar } from 'components/SearchBar/SearchBar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Modal } from 'components/Modal/Modal';
