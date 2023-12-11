@@ -40,6 +40,7 @@ export class App extends Component {
                 images: prevState.images
                   ? [...prevState.images, ...hits]
                   : hits,
+                hiddenBnt: hits.length < 1,
               }));
             }
           })
