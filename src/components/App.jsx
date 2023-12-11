@@ -23,32 +23,6 @@ export class App extends Component {
     toast.error('Sorry, there are no more images matching your search query.');
   };
 
-  onFindMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-      loading: true,
-      hiddenBnt: false,
-    }));
-    setTimeout(() => {
-      fetchGallery(this.props.searchQuery, this.state.page)
-        .then(({ hits, totalHits }) => {
-          if (hits.length === 0) {
-            this.showErrorMsg();
-            this.setState({ hiddenBnt: true });
-          } else
-            this.setState(prevState => ({
-              images: [...prevState.images, ...hits],
-            }));
-          if (12 * this.state.page > totalHits) {
-            this.setState({ hiddenBnt: true });
-            this.showErrorMsg();
-          }
-        })
-        .catch(error => this.setState({ error }))
-        .finally(() => this.setState({ loading: false }));
-    });
-  };
-
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.searchQuery !== this.props.searchQuery) {
       this.setState({ loading: true, images: null, page: 1, hiddenBnt: false });
