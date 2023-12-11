@@ -7,6 +7,7 @@ import { Searchbar } from 'components/SearchBar/SearchBar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Modal } from 'components/Modal/Modal';
 import { fetchGallery } from 'Api/FetchGallery';
+import { Button } from './Button/Button';
 
 export class App extends Component {
   state = {
@@ -55,10 +56,15 @@ export class App extends Component {
     return (
       <Wrapper>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery
-          showModal={this.showModal}
-          searchQuery={this.state.searchQuery}
-        />
+        {this.state.images && this.state.images.length > 0 && (
+          <ImageGallery
+            showModal={this.showModal}
+            searchQuery={this.state.searchQuery}
+          />
+        )}
+        {this.state.page >= 1 &&
+          this.state.images &&
+          this.state.images.length >= 15 && <Button />}
         {this.state.isShowModal && (
           <Modal
             closeModal={this.closeModal}
