@@ -1,5 +1,5 @@
-import { ImageGalleryItem } from 'components/imageGalleryItem/imageGalleryItem';
-import { ImageGalleryUl, Container } from './imageGallery.styled';
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import { ImageGalleryUl, Container } from './ImageGallery.styled';
 import React, { Component } from 'react';
 
 export class ImageGallery extends Component {
