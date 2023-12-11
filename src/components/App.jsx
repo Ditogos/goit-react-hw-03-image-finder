@@ -25,14 +25,23 @@ export class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.searchQuery !== this.props.searchQuery) {
-      this.setState({ loading: true, images: null, page: 1, hiddenBnt: false });
+    if (
+      prevProps.searchQuery !== this.props.searchQuery ||
+      prevState.page !== this.state.page
+    ) {
+      this.setState({ loading: true, images: null, hiddenBnt: false });
       setTimeout(() => {
         fetchGallery(this.props.searchQuery, this.state.page)
           .then(({ hits }) => {
             if (hits.length === 0) {
               this.showErrorMsg();
-            } else this.setState({ images: hits });
+            } else {
+              this.setState(prevState => ({
+                images: prevState.images
+                  ? [...prevState.images, ...hits]
+                  : hits,
+              }));
+            }
           })
           .catch(error => this.setState({ error }))
           .finally(() => this.setState({ loading: false }));
