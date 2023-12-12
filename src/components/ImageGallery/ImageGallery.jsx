@@ -6,12 +6,12 @@ export const ImageGallery = ({ img, showModal }) => {
   return (
     <Container>
       <ImageGalleryUl>
-        {img.map(({ id, description, largeImage, smalImg }) => (
+        {img.map(({ id, description, largeImage, webformatURL }) => (
           <ImageGalleryItem
             key={id}
             description={description}
-            smallImg={smalImg}
-            largeImage={largeImage}
+            webformatURL={webformatURL}
+            largeImageURL={largeImage}
             showModal={showModal}
           />
         ))}

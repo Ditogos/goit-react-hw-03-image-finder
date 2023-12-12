@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ImageGalleryItemList } from './ImageGalleryItem.styled';
 
-export const ImageGalleryItem = ({ showModal, smallImg, alt }) => {
+export const ImageGalleryItem = ({ showModal, webformatURL, alt }) => {
   return (
-    <ImageGalleryItemList onClick={showModal}>
-      <img src={smallImg} alt={alt} />
+    <ImageGalleryItemList onClick={() => showModal(webformatURL)}>
+      <img src={webformatURL} alt={alt} />
     </ImageGalleryItemList>
   );
 };
 
 ImageGalleryItem.propTypes = {
-  smallImg: PropTypes.string,
+  webformatURL: PropTypes.string.isRequired,
   alt: PropTypes.string,
   showModal: PropTypes.func.isRequired,
 };
