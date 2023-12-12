@@ -26,27 +26,24 @@ export class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      prevProps.searchQuery !== this.props.searchQuery ||
+      prevState.searchQuery !== this.state.searchQuery ||
       prevState.page !== this.state.page
     ) {
       this.setState({ loading: true, images: null, hiddenBnt: false });
-      setTimeout(() => {
-        fetchGallery(this.props.searchQuery, this.state.page)
-          .then(({ hits }) => {
-            if (hits.length === 0) {
-              this.showErrorMsg();
-            } else {
-              this.setState(prevState => ({
-                images: prevState.images
-                  ? [...prevState.images, ...hits]
-                  : hits,
-                hiddenBnt: hits.length < 1,
-              }));
-            }
-          })
-          .catch(error => this.setState({ error }))
-          .finally(() => this.setState({ loading: false }));
-      });
+
+      fetchGallery(this.state.searchQuery, this.state.page)
+        .then(({ hits }) => {
+          if (hits.length === 0) {
+            this.showErrorMsg();
+          } else {
+            this.setState(prevState => ({
+              images: prevState.images ? [...prevState.images, ...hits] : hits,
+              hiddenBnt: hits.length < 1,
+            }));
+          }
+        })
+        .catch(error => this.setState({ error }))
+        .finally(() => this.setState({ loading: false }));
     }
   }
 
@@ -66,11 +63,8 @@ export class App extends Component {
     return (
       <Wrapper>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {this.state.images && this.state.images.length > 0 && (
-          <ImageGallery
-            showModal={this.showModal}
-            searchQuery={this.state.searchQuery}
-          />
+        {this.state.images && (
+          <ImageGallery showModal={this.showModal} img={this.state.images} />
         )}
         {this.state.page >= 1 &&
           this.state.images &&
