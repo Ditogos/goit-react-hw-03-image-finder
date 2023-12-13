@@ -15,25 +15,24 @@ export class App extends Component {
     searchQuery: '',
     isShowModal: false,
     modalImage: '',
-    images: null,
+    images: [],
     loading: false,
     page: 1,
-    hiddenBnt: false,
+    hiddenBtn: false,
   };
 
   showErrorMsg = () => {
     toast.error('Sorry, there are no more images matching your search query.');
   };
   onFindMore = () => {
-    this.setState({ loading: true });
-    this.loadMoreImages();
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
   componentDidUpdate(prevProps, prevState) {
     if (
       prevState.searchQuery !== this.state.searchQuery ||
       prevState.page !== this.state.page
     ) {
-      this.setState({ loading: true, images: null, hiddenBnt: false });
+      this.setState({ loading: true });
 
       fetchGallery(this.state.searchQuery, this.state.page)
         .then(({ hits }) => {
@@ -41,8 +40,8 @@ export class App extends Component {
             this.showErrorMsg();
           } else {
             this.setState(prevState => ({
-              images: prevState.images ? [...prevState.images, ...hits] : hits,
-              hiddenBnt: hits.length < 1,
+              images: [...prevState.images, ...hits],
+              hiddenBtn: hits.length < 1,
             }));
           }
         })
@@ -52,23 +51,7 @@ export class App extends Component {
   }
 
   handleFormSubmit = searchQuery => {
-    this.setState({ searchQuery });
-  };
-
-  loadMoreImages = () => {
-    fetchGallery(this.state.searchQuery, this.state.page)
-      .then(({ hits }) => {
-        if (hits.length === 0) {
-          this.showErrorMsg();
-        } else {
-          this.setState(prevState => ({
-            images: prevState.images ? [...prevState.images, ...hits] : hits,
-            totalImagesLoaded: prevState.totalImagesLoaded + hits.length,
-          }));
-        }
-      })
-      .catch(error => this.setState({ error }))
-      .finally(() => this.setState({ loading: false }));
+    this.setState({ searchQuery, images: [], hiddenBtn: false });
   };
   showModal = largeImageURL => {
     this.setState({ isShowModal: true, modalImage: largeImageURL });
